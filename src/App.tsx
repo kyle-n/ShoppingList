@@ -1,10 +1,24 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ItemInput from './ItemInput';
 import { Item } from './types';
 import ItemList from './ItemList';
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
+  const deleteItem = useCallback(
+    (id: string) => {
+      setItems(prev => prev.filter(item => item.id !== id));
+    },
+    [setItems]
+  );
+  const updateName = useCallback(
+    (id: string, newName: string) => {
+      setItems(prev =>
+        prev.map(item => (item.id === id ? { ...item, name: newName } : item))
+      );
+    },
+    [setItems]
+  );
 
   return (
     <>
@@ -16,7 +30,8 @@ function App() {
         <hr style={{ margin: '2rem 0' }} />
         <ItemList
           items={items}
-          onDelete={id => setItems(prev => prev.filter(item => item.id !== id))}
+          onDelete={deleteItem}
+          onChangeName={updateName}
         />
       </main>
     </>

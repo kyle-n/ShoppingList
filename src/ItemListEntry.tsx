@@ -5,9 +5,10 @@ type Props = {
   item: Item;
   items: Item[];
   onDelete: (id: string) => void;
+  onChangeName: (id: string, newName: string) => void;
 };
 
-function ItemListEntry({ item, items, onDelete }: Props) {
+function ItemListEntry({ item, items, onDelete, onChangeName }: Props) {
   const deleteSelf = useCallback(() => onDelete(item.id), [item.id, onDelete]);
   const isDuplicated = useMemo(() => {
     const normalizedItemName = item.name.toLowerCase().trim();
@@ -19,14 +20,20 @@ function ItemListEntry({ item, items, onDelete }: Props) {
   }, [item.id, item.name, items]);
 
   return (
-    <li>
-      <span style={{ color: isDuplicated ? 'red' : undefined }}>
-        {item.name}
-      </span>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <input
+        type="text"
+        value={item.name}
+        style={{ border: isDuplicated ? '1px solid red' : undefined }}
+        onChange={event => {
+          const newName = event.target.value;
+          onChangeName(item.id, newName);
+        }}
+      />
       <button onClick={deleteSelf} style={{ marginLeft: '1rem' }}>
         Delete
       </button>
-    </li>
+    </div>
   );
 }
 

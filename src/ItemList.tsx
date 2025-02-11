@@ -4,20 +4,22 @@ import { Item } from './types';
 type Props = {
   items: Item[];
   onDelete: (id: string) => void;
+  onChangeName: (id: string, newName: string) => void;
 };
 
-function ItemList({ items, onDelete }: Props) {
+function ItemList({ items, onDelete, onChangeName }: Props) {
   return (
-    <ul>
+    <div>
       {items.map(item => (
         <ItemListEntry
           key={item.id}
           item={item}
           items={items}
           onDelete={onDelete}
+          onChangeName={onChangeName}
         />
       ))}
-    </ul>
+    </div>
   );
 }
 
