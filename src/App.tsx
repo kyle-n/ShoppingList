@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import ItemInput from './ItemInput';
+import { Item } from './types';
 
 function App() {
-  const [items, setItems] = useState<Array<{name: string; id: string}>>([])
+  const [items, setItems] = useState<Item[]>([])
 
   return (
     <>

@@ -1,5 +1,7 @@
+import { Item } from './types'
+
 type Props = {
-  onSubmit: (item: {name: string; id: string}) => void
+  onSubmit: (newItem: Item) => void
 }
 
 function ItemInput({onSubmit}: Props) {
