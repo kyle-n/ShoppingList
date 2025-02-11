@@ -14,7 +14,10 @@ function App() {
       <main>
         <ItemInput onSubmit={newItem => setItems([...items, newItem])} />
         <hr style={{ margin: '2rem 0' }} />
-        <ItemList items={items} />
+        <ItemList
+          items={items}
+          onDelete={id => setItems(prev => prev.filter(item => item.id !== id))}
+        />
       </main>
     </>
   );
