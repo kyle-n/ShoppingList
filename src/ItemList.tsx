@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import ItemListEntry from './ItemListEntry';
 import { Item } from './types';
 
@@ -8,13 +9,17 @@ type Props = {
 };
 
 function ItemList({ items, onDelete, onChangeName }: Props) {
+  const getIfDuplicated = useCallback((item: Item, items: Item[]) => {
+    return items.filter(i => i.name === item.name).length > 1;
+  }, []);
+
   return (
     <div>
       {items.map(item => (
         <ItemListEntry
           key={item.id}
           item={item}
-          items={items}
+          isDuplicated={getIfDuplicated(item, items)}
           onDelete={onDelete}
           onChangeName={onChangeName}
         />
@@ -23,4 +28,4 @@ function ItemList({ items, onDelete, onChangeName }: Props) {
   );
 }
 
-export default ItemList;
+export default memo(ItemList);
