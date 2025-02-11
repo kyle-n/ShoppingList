@@ -1,24 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer, useState } from 'react';
 import ItemInput from './ItemInput';
 import { Item } from './types';
 import ItemList from './ItemList';
+import { globalStateReducer, initialGlobalState } from './store';
 
 function App() {
-  const [items, setItems] = useState<Item[]>([]);
-  const deleteItem = useCallback(
-    (id: string) => {
-      setItems(prev => prev.filter(item => item.id !== id));
-    },
-    [setItems]
-  );
-  const updateName = useCallback(
-    (id: string, newName: string) => {
-      setItems(prev =>
-        prev.map(item => (item.id === id ? { ...item, name: newName } : item))
-      );
-    },
-    [setItems]
-  );
+  const [state, dispatch] = useReducer(globalStateReducer, initialGlobalState);
+  const addItem = useCallback((newItem: Item) => dispatch({ type: 'addItem', newItem }), [dispatch]);
 
   return (
     <>
@@ -26,7 +14,7 @@ function App() {
         <h1>Shopping List</h1>
       </header>
       <main>
-        <ItemInput onSubmit={newItem => setItems([...items, newItem])} />
+        <ItemInput onSubmit={addItem} />
         <hr style={{ margin: '2rem 0' }} />
         <ItemList
           items={items}
