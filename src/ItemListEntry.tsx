@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Item } from './types';
 
 type Props = {
@@ -30,4 +30,4 @@ function ItemListEntry({ item, items, onDelete }: Props) {
   );
 }
 
-export default ItemListEntry;
+export default memo(ItemListEntry);
