@@ -10,7 +10,12 @@ function ItemList({ items, onDelete }: Props) {
   return (
     <ul>
       {items.map(item => (
-        <ItemListEntry key={item.id} item={item} onDelete={onDelete} />
+        <ItemListEntry
+          key={item.id}
+          item={item}
+          items={items}
+          onDelete={onDelete}
+        />
       ))}
     </ul>
   );
