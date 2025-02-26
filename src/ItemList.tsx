@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import ItemListEntry from './ItemListEntry';
 import { Item } from './types';
 
@@ -23,4 +24,4 @@ function ItemList({ items, onDelete, onChangeName }: Props) {
   );
 }
 
-export default ItemList;
+export default memo(ItemList);
