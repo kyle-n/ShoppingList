@@ -1,23 +1,15 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { Item } from './types';
 
 type Props = {
   item: Item;
-  items: Item[];
+  isDuplicated: boolean;
   onDelete: (id: string) => void;
   onChangeName: (id: string, newName: string) => void;
 };
 
-function ItemListEntry({ item, items, onDelete, onChangeName }: Props) {
+function ItemListEntry({ item, isDuplicated, onDelete, onChangeName }: Props) {
   const deleteSelf = useCallback(() => onDelete(item.id), [item.id, onDelete]);
-  const isDuplicated = useMemo(() => {
-    const normalizedItemName = item.name.toLowerCase().trim();
-    return items.some(
-      otherItem =>
-        otherItem.id !== item.id &&
-        otherItem.name.toLowerCase().trim() === normalizedItemName
-    );
-  }, [item.id, item.name, items]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
