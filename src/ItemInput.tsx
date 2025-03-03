@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Item } from './types';
 
 type Props = {
@@ -27,4 +28,4 @@ function ItemInput({ onSubmit }: Props) {
   );
 }
 
-export default ItemInput;
+export default memo(ItemInput);

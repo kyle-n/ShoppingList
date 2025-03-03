@@ -5,6 +5,7 @@ import ItemList from './ItemList';
 
 function App() {
   const [items, setItems] = useState<Item[]>([]);
+  const addItem = useCallback((newItem: Item) => setItems(prev => [...prev, newItem]), [setItems]);
   const deleteItem = useCallback(
     (id: string) => {
       setItems(prev => prev.filter(item => item.id !== id));
@@ -26,7 +27,7 @@ function App() {
         <h1>Shopping List</h1>
       </header>
       <main>
-        <ItemInput onSubmit={newItem => setItems([...items, newItem])} />
+        <ItemInput onSubmit={addItem} />
         <hr style={{ margin: '2rem 0' }} />
         <ItemList
           items={items}
