@@ -21,8 +21,7 @@ function App() {
     [dispatch]
   );
   const undo = useCallback(() => {
-    // Implement undo functionality here
-    console.log('Undo action triggered');
+    dispatch({ type: 'undo' });
   }, []);
 
   return (
