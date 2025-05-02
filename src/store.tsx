@@ -77,6 +77,13 @@ function undoActionReducer(state: GlobalState): GlobalState {
         ...newState,
         items: newState.items.filter(item => item.id !== action.newItem.id)
       };
+    case 'deleteItem': {
+      const deletedItem = lastEvent.previousValue as Item;
+      return {
+        ...newState,
+        items: [...newState.items, deletedItem]
+      };
+    }
     default:
       return newState;
   }
