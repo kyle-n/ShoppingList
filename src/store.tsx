@@ -2,12 +2,15 @@ import { Item } from './types';
 
 type GlobalState = {
   items: Item[];
-  actions: Action[];
+  events: Array<{
+    action: Action;
+    previousValue?: unknown;
+  }>;
 };
 
 export const initialGlobalState: GlobalState = {
   items: [],
-  actions: []
+  events: []
 };
 
 export type Action =
@@ -20,47 +23,61 @@ export function globalStateReducer(
   state: GlobalState,
   action: Action
 ): GlobalState {
-  const newState = { ...state, actions: [...state.actions, action] };
   switch (action.type) {
     case 'addItem':
-      return { ...newState, items: [...newState.items, action.newItem] };
+      return {
+        ...state,
+        items: [...state.items, action.newItem],
+        events: [...state.events, { action }]
+      };
     case 'deleteItem':
       return {
-        ...newState,
-        items: state.items.filter(item => item.id !== action.id)
+        ...state,
+        items: state.items.filter(item => item.id !== action.id),
+        events: [
+          ...state.events,
+          {
+            action,
+            previousValue: state.items.find(item => item.id === action.id)
+          }
+        ]
       };
     case 'updateName':
       return {
-        ...newState,
+        ...state,
         items: state.items.map(item =>
           item.id === action.id ? { ...item, name: action.newName } : item
-        )
+        ),
+        events: [
+          ...state.events,
+          {
+            action,
+            previousValue: state.items.find(item => item.id === action.id)
+          }
+        ]
       };
     case 'undo': {
-      if (newState.actions.length < 2) {
+      if (state.events.length === 0) {
         return state;
       }
-      // Removes undo action from the actions stack
-      newState.actions.pop();
-      const lastAction = newState.actions.pop() as Action;
-      return undoActionReducer(newState, lastAction);
+      return undoActionReducer(state);
     }
     default:
       return state;
   }
 }
 
-function undoActionReducer(
-  state: GlobalState,
-  action: Action
-): GlobalState {
+function undoActionReducer(state: GlobalState): GlobalState {
+  const newState = structuredClone(state);
+  const lastEvent = newState.events.pop()!;
+  const { action } = lastEvent;
   switch (action.type) {
     case 'addItem':
       return {
-        ...state,
-        items: state.items.filter(item => item.id !== action.newItem.id)
-      }
+        ...newState,
+        items: newState.items.filter(item => item.id !== action.newItem.id)
+      };
     default:
-      return state;
+      return newState;
   }
 }
