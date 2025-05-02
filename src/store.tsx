@@ -52,7 +52,7 @@ export function globalStateReducer(
           ...state.events,
           {
             action,
-            previousValue: state.items.find(item => item.id === action.id)
+            previousValue: state.items.find(item => item.id === action.id)?.name ?? ''
           }
         ]
       };
@@ -82,6 +82,15 @@ function undoActionReducer(state: GlobalState): GlobalState {
       return {
         ...newState,
         items: [...newState.items, deletedItem]
+      };
+    }
+    case 'updateName': {
+      const previousName = lastEvent.previousValue as string;
+      return {
+        ...newState,
+        items: newState.items.map(item =>
+          item.id === action.id ? { ...item, name: previousName } : item
+        )
       };
     }
     default:
