@@ -3,6 +3,7 @@ import ItemInput from './ItemInput';
 import { Item } from './types';
 import ItemList from './ItemList';
 import { globalStateReducer, initialGlobalState } from './store';
+import UndoButton from './UndoButton';
 
 function App() {
   const [state, dispatch] = useReducer(globalStateReducer, initialGlobalState);
@@ -19,6 +20,10 @@ function App() {
       dispatch({ type: 'updateName', id, newName }),
     [dispatch]
   );
+  const undo = useCallback(() => {
+    // Implement undo functionality here
+    console.log('Undo action triggered');
+  }, []);
 
   return (
     <>
@@ -27,6 +32,7 @@ function App() {
       </header>
       <main>
         <ItemInput onSubmit={addItem} />
+        <UndoButton onClick={undo} />
         <hr style={{ margin: '2rem 0' }} />
         <ItemList
           items={state.items}
