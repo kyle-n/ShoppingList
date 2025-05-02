@@ -1,25 +1,28 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useReducer } from 'react';
 import ItemInput from './ItemInput';
 import { Item } from './types';
 import ItemList from './ItemList';
+import { globalStateReducer, initialGlobalState } from './store';
+import UndoButton from './UndoButton';
 
 function App() {
-  const [items, setItems] = useState<Item[]>([]);
-  const addItem = useCallback((newItem: Item) => setItems(prev => [...prev, newItem]), [setItems]);
+  const [state, dispatch] = useReducer(globalStateReducer, initialGlobalState);
+  const addItem = useCallback(
+    (newItem: Item) => dispatch({ type: 'addItem', newItem }),
+    [dispatch]
+  );
   const deleteItem = useCallback(
-    (id: string) => {
-      setItems(prev => prev.filter(item => item.id !== id));
-    },
-    [setItems]
+    (id: string) => dispatch({ type: 'deleteItem', id }),
+    [dispatch]
   );
   const updateName = useCallback(
-    (id: string, newName: string) => {
-      setItems(prev =>
-        prev.map(item => (item.id === id ? { ...item, name: newName } : item))
-      );
-    },
-    [setItems]
+    (id: string, newName: string) =>
+      dispatch({ type: 'updateName', id, newName }),
+    [dispatch]
   );
+  const undo = useCallback(() => {
+    dispatch({ type: 'undo' });
+  }, []);
 
   return (
     <>
@@ -28,9 +31,10 @@ function App() {
       </header>
       <main>
         <ItemInput onSubmit={addItem} />
+        <UndoButton onClick={undo} />
         <hr style={{ margin: '2rem 0' }} />
         <ItemList
-          items={items}
+          items={state.items}
           onDelete={deleteItem}
           onChangeName={updateName}
         />

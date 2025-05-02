@@ -9,13 +9,8 @@ type Props = {
 };
 
 function ItemList({ items, onDelete, onChangeName }: Props) {
-  const isDuplicated = useCallback((items: Item[], item: Item) => {
-    const normalizedItemName = item.name.toLowerCase().trim();
-    return items.some(
-      otherItem =>
-        otherItem.id !== item.id &&
-        otherItem.name.toLowerCase().trim() === normalizedItemName
-    );
+  const getIfDuplicated = useCallback((item: Item, items: Item[]) => {
+    return items.filter(i => i.name === item.name).length > 1;
   }, []);
 
   return (
@@ -24,7 +19,7 @@ function ItemList({ items, onDelete, onChangeName }: Props) {
         <ItemListEntry
           key={item.id}
           item={item}
-          isDuplicated={isDuplicated(items, item)}
+          isDuplicated={getIfDuplicated(item, items)}
           onDelete={onDelete}
           onChangeName={onChangeName}
         />
